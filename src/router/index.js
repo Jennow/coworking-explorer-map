@@ -1,7 +1,6 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Detail from '../views/Detail.vue';
-import Filter from '../views/Filter.vue';
 
 const routes = [
   {
@@ -10,14 +9,9 @@ const routes = [
     component: Home,
   },
   {
-    path: '/detail',
+    path: '/detail/:id',
     name: 'Detail',
     component: Detail,
-  },
-  {
-    path: '/filter',
-    name: 'Filter',
-    component: Filter,
   },
   // {
   //   path: '/about',
@@ -30,7 +24,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 

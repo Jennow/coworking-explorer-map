@@ -1,15 +1,61 @@
 <template>
-  <div class='detail'>
+  <LoadingScreen :isLoading="isLoading" />
+  <div v-if="!isLoading" class='detail'>
     <div class="teaser" style="position: relative">
       <div class="coverphoto" :style="{ 'background-image': 'url(' + space.coverPhoto +  ')' }"/>
-      <div class="logo" :style="{'background-image': 'url(' + space.logo +  ')'}"/>
+      <div class="glass-logo-wrapper">
+        <div class="logo" :style="{'background-image': 'url(' + space.logo +  ')'}"/>
+      </div>
     </div>
-    <div class="space-info">
-      <h1>{{ space.name }}</h1>
-      <p>{{ space.description }}</p>
-      <p class="address">{{ space.map ? space.map.address : '' }}</p>
+
+    <div class="space-info container">
+        <h1>{{ space.name }}</h1>
+      <div class="glass">
+        {{ space.description }}
+      </div>
+        <h2>Address</h2>
+
+      <div class="address glass">
+        <span class="address-text">{{ space.map ? space.map.address : '' }}</span>
+        <GMapMap
+          :options="{
+            mapId: '213208b604b031da',
+            disableDefaultUi: false
+          }"
+          :center="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
+          :zoom="10"
+          map-type-id="roadmap"
+          :disableDefaultUI="true"
+    >
+      <GMapMarker
+          :position="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
+          :clickable="false"
+          :draggable="false"
+          :icon="{
+              url: 'https://jencoding.com/img/markers/marker1.png',
+              scaledSize: {width: 40, height: 40},
+              labelOrigin: {x: 20, y: -40}
+          }"
+      >
+      </GMapMarker>
+    </GMapMap>
+      </div>
+      <div v-if="space.prices.length">
+        <h2>Prices</h2>
+        <div class="glass">
+          <div class="price-tile" v-for="price in space.prices" :key="price">
+            <div>
+              <h2>{{ price.priceTitle }}</h2>
+              <span class="person-hint">{{ price.personHint }}</span>
+            </div>
+            <div>{{ price.legend }}</div>
+            <div class="price-tag">{{ price.price }} per {{ price.frequency }}</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <a :href="space.website" class="button cta">Visit website</a>
+    <a :href="'https://' + space.website" class="button cta">visit website</a>
+
 </div>
 </template>
 
@@ -22,56 +68,111 @@
     text-align: left;
   }
 
-  h1 {
-    font-size: 3rem;
-    text-transform: uppercase;
-  }
-
-  p, a {
-    font-size: 1.2rem;
-  }
-
   .coverphoto {
-    max-height: 300px;
-    height: 50vh;
+    height: 35vh;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
     margin-bottom: 75px;
-  }
+    box-sizing: border-box;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    }
 
-  .logo {
-    height: 150px;
-    width: 150px;
-    background-size: cover;
-    background-repeat: no-repeat;
+  .glass-logo-wrapper {
+    background-color: rgba(255, 255, 255, .2);
+    backdrop-filter: blur(5px);
+    height: 140px;
+    width: 140px;
+    bottom: -65px;
     position: absolute;
-    bottom: -75px;
-    margin: auto;
     left: 0;
     right: 0;
     border-radius: 50%;
-    border: 8px solid #fff;
+    padding: 10px;
+    margin: auto;
+    box-sizing: border-box;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  }
+
+  .logo {
+    height: 120px;
+    width: 120px;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-color: aliceblue;
+    border-radius: 50%;
     background-position: center;
-    -webkit-box-shadow: 0px 0px 10px 0px #333333;
-    box-shadow: 0px 5px 10px 0px #666;
+  }
+
+  .address {
+    margin-bottom: 20px;
+  }
+
+  .vue-map-container {
+    height: 20vh;
+  }
+
+  .price-tile {
+      border-bottom: 1px solid #fff;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+  }
+
+  .price-tile h2 {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+
+  .person-hint {
+    font-style: italic;
+    color: #7d457b;
+    float: right;
+    line-height: 2.4rem;
+    padding: 0 10px;
+  }
+
+  .price-tag {
+    background-color: #fff;
+    color: #7d457b;
+    border-radius: 50px;
+    padding: 5px;
+    font-weight: 900;
+    width: 250px;
+    text-align: center;
+    margin: 20px 0 0 auto;
   }
 </style>
 
 <script>
+import LoadingScreen from './LoadingScreen.vue';
+
 const axios = require('axios');
 
 export default {
   data() {
     return {
-      space: {},
+      isLoading: true,
+      space: {
+        map: {
+          lat: 1,
+          lng: 1,
+        },
+        prices: [],
+      },
     };
   },
+  components: {
+    LoadingScreen,
+  },
   mounted() {
-    axios.get('https://coworking-explorer.jencoding.com/spaces/sleevesup-hannover')
+    const identifier = this.$route.params.id;
+    console.log(identifier);
+    axios.get(`https://coworking-explorer.jencoding.com/spaces/${identifier}`)
       .then((response) => {
         this.space = response.data;
-        console.log(response);
+        this.isLoading = false;
       });
   },
 };

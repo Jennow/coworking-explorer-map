@@ -1,57 +1,120 @@
 <template>
-  <div class="home">
+  <LoadingScreen :isLoading="isLoading" />
+  <div v-if="!isLoading" class="home">
     <GMapMap
        :options="{
-        zoomControl: true,
-        mapTypeControl: false,
-        scaleControl: false,
-        streetViewControl: false,
-        rotateControl: false,
-        fullscreenControl: true,
-        disableDefaultUi: false
+        disableDefaultUi: false,
+        mapId: '213208b604b031da',
       }"
       :center="center"
-      :zoom="3"
-      map-type-id="terrain"
-      style="width: 500px; height: 500px"
+      :zoom="6"
+      map-type-id="roadmap"
+      style="width: 100vw; height: 100vh"
       :disableDefaultUI="true"
     >
     <GMapCluster
       enableRetinaIcons="true"
-      imagePath="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/OOjs_UI_icon_info.svg/1200px-OOjs_UI_icon_info.svg.png"
+      :minimumClusterSize="14"
+      :zoomOnClick="true"
+      imagePath="https://jencoding.com/img/markers/cluster"
       >
-      <template v-for="(space) in spaces" :key="space">
+      <template v-for="(space, index) in spaces" :key="space">
         <GMapMarker
+            :icon="{
+              url: 'https://jencoding.com/img/markers/marker1.png',
+              scaledSize: {width: 40, height: 40},
+              labelOrigin: {x: 20, y: -40}
+            }"
             :position="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
             :clickable="true"
-            @click="center=space.map"
+            :draggable="false"
+            @click="openMarker(index)"
         >
-          <!-- <GMapInfoWindow>
-            <div>I am in info window
-            </div>
-        </GMapInfoWindow> -->
         </GMapMarker>
-
-      </template>
+        </template>
     </GMapCluster>
     </GMapMap>
+    <div v-if="openedMarker.name" class="glass info-modal">
+      <div v-if="openedMarker.name" class="info">
+        <span class="x-icon" @click="openMarker(null)">
+          <span class="material-icons">
+            close
+          </span>
+        </span>
+        <h2>{{ openedMarker.name }}</h2>
+        <img :src="openedMarker['cover-photo']" alt="">
+        <a :href="'/detail/' + openedMarker.slug" class="button cta">Details</a>
+      </div>
+    </div>
   </div>
 </template>
 
-<style>
-.vue-map {
-  height: 500px;
+<style scoped>
+
+.home {
+  padding: 20px;
 }
+
+.vue-map-container {
+  height: calc(100vh - 40px);
+}
+
+.info-modal {
+  position: absolute;
+  width: 600px;
+  max-width: calc(100% - 40px);
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.info-modal .x-icon {
+  float: right;
+  font-size: 2rem;
+}
+
+.info-modal .x-icon span {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.info-modal .info {
+  background: #ffbb3b;
+  background: linear-gradient(45deg,
+          #ffbb3b 0%,
+          #ff688f 50%,
+          #7d457b 100%);
+  padding: 20px;
+}
+
+.info-modal .info img {
+  display: block;
+  width: 100%;
+}
+
 </style>
 
 <script>
+import LoadingScreen from './LoadingScreen.vue';
+
 const axios = require('axios');
 
 export default {
   name: 'Home',
+  components: {
+    LoadingScreen,
+  },
   data() {
     return {
-      center: { lng: 51.093048, lat: 6.842120 },
+      isLoading: true,
+      openedMarkerIndex: null,
+      openedMarker: {
+        name: '',
+        slug: '',
+        image: '',
+      },
+      center: { lng: 10.000654, lat: 53.550341 },
       spaces: [
         {
           map: {
@@ -60,10 +123,25 @@ export default {
       ],
     };
   },
+  methods: {
+    openMarker(index) {
+      this.openedMarkerIndex = index;
+      this.openedMarker = {
+        name: '',
+        slug: '',
+        image: '',
+      };
+      if (this.spaces[index]) {
+        this.openedMarker = this.spaces[index];
+        console.log(this.openedMarker);
+      }
+    },
+  },
   mounted() {
     axios.get('https://coworking-explorer.jencoding.com/spaces')
       .then((response) => {
         this.spaces = response.data;
+        this.isLoading = false;
       });
   },
 };
