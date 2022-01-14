@@ -10,15 +10,13 @@
 <style>
 
 body {
-  /* background: rgb(113,182,255);
-  background: linear-gradient(189deg, rgba(113,182,255,1) 10%,
-                                    rgba(217,169,255,1) 51%,
-                                    rgba(158,255,234,1) 100%); */
-background: #ffbb3b;
-background: linear-gradient(45deg,
-         #ffbb3b 0%,
-         #ff688f 50%,
-         #7d457b 100%);
+  background: #6051dc;
+  background: linear-gradient(189deg, #6051dc 10%,
+                                    rgb(243, 132, 184) 51%,
+                                    rgb(81, 230, 197) 100%);
+  background: #fff;
+  /* background: linear-gradient(
+189deg, #857ec6 10%, rgb(0 180 149) 100%); */
   margin: 0;
   padding: 0;
   font-size: 1.2rem;
@@ -29,7 +27,7 @@ background: linear-gradient(45deg,
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #fff;
+  color: #000;
   min-height: 100vh;
 }
 
@@ -71,9 +69,9 @@ p {
 }
 
 .button {
-  border: 2px solid #fff;
+  border: 2px solid #6051dc;
   border-radius: 50px;
-  color: #fff;
+  color: #6051dc;
   padding: 8px 20px;
   text-decoration: none;
   box-sizing: border-box;
@@ -82,28 +80,33 @@ p {
 }
 
 .cta {
-  display: inline-block;
-  margin: 20px;
+  display: block;
+  margin: 60px auto 40px;
   padding: 8px 30px;
   font-size: 1.4rem;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
 .button:hover {
-  background-color: #fff;
-  color: #000;
-  mix-blend-mode: lighten;
+  background-color: #6051dc;
+  color: #fff;
+  mix-blend-mode: darken;
 }
 
 .material-icons {
   color: #fff;
-  background-color: #7d457b;
-  border: 1px solid #7d457b;
+  background-color: #6051dc;
+  border: 1px solid #6051dc;
   border-radius: 50px;
   padding: 5px;
 }
 
 .glass {
-  background-color: rgba(255, 255, 255, .20);
+  /* background-color: rgba(255, 255, 255, .30); */
+  background-color: #6051dc;
+  color: #fff;
   backdrop-filter: blur(5px);
   box-sizing: border-box;
   box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,

@@ -9,12 +9,25 @@
     </div>
 
     <div class="space-info container">
-        <h1>{{ space.name }}</h1>
+      <h1>{{ space.name }}</h1>
       <div class="glass">
         {{ space.description }}
       </div>
-        <h2>Address</h2>
-
+      <a :href="'https://' + space.website" class="button cta">visit website</a>
+      <div v-if="space.prices.length">
+        <h2>Prices</h2>
+        <div class="glass">
+          <div class="price-tile" v-for="price in space.prices" :key="price">
+            <div>
+              <h2>{{ price.priceTitle }}</h2>
+              <span class="person-hint">{{ price.personHint }}</span>
+            </div>
+            <div>{{ price.legend }}</div>
+            <div class="price-tag">{{ price.price }} per {{ price.frequency }}</div>
+          </div>
+        </div>
+      </div>
+      <h2>Address</h2>
       <div class="address glass">
         <span class="address-text">{{ space.map ? space.map.address : '' }}</span>
         <GMapMap
@@ -32,30 +45,16 @@
           :clickable="false"
           :draggable="false"
           :icon="{
-              url: 'https://jencoding.com/img/markers/marker1.png',
-              scaledSize: {width: 40, height: 40},
-              labelOrigin: {x: 20, y: -40}
+              url: require('./../assets/Marker.png'),
+              scaledSize: {width: 30, height: 30},
+              labelOrigin: {x: 15, y: -30}
           }"
       >
       </GMapMarker>
     </GMapMap>
       </div>
-      <div v-if="space.prices.length">
-        <h2>Prices</h2>
-        <div class="glass">
-          <div class="price-tile" v-for="price in space.prices" :key="price">
-            <div>
-              <h2>{{ price.priceTitle }}</h2>
-              <span class="person-hint">{{ price.personHint }}</span>
-            </div>
-            <div>{{ price.legend }}</div>
-            <div class="price-tag">{{ price.price }} per {{ price.frequency }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <a :href="'https://' + space.website" class="button cta">visit website</a>
 
+  </div>
 </div>
 </template>
 
@@ -82,8 +81,8 @@
   .glass-logo-wrapper {
     background-color: rgba(255, 255, 255, .2);
     backdrop-filter: blur(5px);
-    height: 140px;
-    width: 140px;
+    height: 180px;
+    width: 180px;
     bottom: -65px;
     position: absolute;
     left: 0;
@@ -97,11 +96,11 @@
   }
 
   .logo {
-    height: 120px;
-    width: 120px;
+    height: 160px;
+    width: 160px;
     background-size: 80%;
     background-repeat: no-repeat;
-    background-color: aliceblue;
+    background-color: #fff;
     border-radius: 50%;
     background-position: center;
   }
@@ -167,12 +166,17 @@ export default {
     LoadingScreen,
   },
   mounted() {
+    const component = this;
     const identifier = this.$route.params.id;
     console.log(identifier);
-    axios.get(`https://coworking-explorer.jencoding.com/spaces/${identifier}`)
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        component.isLoading = false;
+      }, 500);
+    });
+    axios.get(`https://coworking-explorer.jencoding.com/api/spaces/${identifier}`)
       .then((response) => {
         this.space = response.data;
-        this.isLoading = false;
       });
   },
 };

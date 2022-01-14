@@ -13,17 +13,18 @@
       :disableDefaultUI="true"
     >
     <GMapCluster
-      enableRetinaIcons="true"
-      :minimumClusterSize="14"
+      :enableRetinaIcons="true"
+      :minimumClusterSize="10"
       :zoomOnClick="true"
-      imagePath="https://jencoding.com/img/markers/cluster"
+      :styles="clusterStyles"
+      imagePath="https://coworking-explorer.jencoding.com/img/Cluster.95f03b58"
       >
       <template v-for="(space, index) in spaces" :key="space">
         <GMapMarker
             :icon="{
-              url: 'https://jencoding.com/img/markers/marker1.png',
-              scaledSize: {width: 40, height: 40},
-              labelOrigin: {x: 20, y: -40}
+              url: require('./../assets/Marker.png'),
+              scaledSize: {width: 30, height: 30},
+              labelOrigin: {x: 15, y: -30}
             }"
             :position="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
             :clickable="true"
@@ -34,7 +35,7 @@
         </template>
     </GMapCluster>
     </GMapMap>
-    <div v-if="openedMarker.name" class="glass info-modal">
+    <div v-if="openedMarker.name" class="info-modal">
       <div v-if="openedMarker.name" class="info">
         <span class="x-icon" @click="openMarker(null)">
           <span class="material-icons">
@@ -51,20 +52,18 @@
 
 <style scoped>
 
-.home {
-  padding: 20px;
-}
-
 .vue-map-container {
-  height: calc(100vh - 40px);
+  height: 100vh;
+  overflow-y: hidden;
 }
 
 .info-modal {
   position: absolute;
-  width: 600px;
-  max-width: calc(100% - 40px);
-  bottom: 40px;
+  width: 100vw;
+  max-height: 50vh;
+  bottom: 0px;
   left: 50%;
+  color: #000;
   transform: translateX(-50%);
 }
 
@@ -80,17 +79,14 @@
 }
 
 .info-modal .info {
-  background: #ffbb3b;
-  background: linear-gradient(45deg,
-          #ffbb3b 0%,
-          #ff688f 50%,
-          #7d457b 100%);
+  background: #fff;
   padding: 20px;
 }
 
 .info-modal .info img {
   display: block;
-  width: 100%;
+  margin: auto;
+  /* width: 100%; */
 }
 
 </style>
@@ -99,6 +95,7 @@
 import LoadingScreen from './LoadingScreen.vue';
 
 const axios = require('axios');
+const cluster = require('../assets/Cluster.png');
 
 export default {
   name: 'Home',
@@ -107,6 +104,7 @@ export default {
   },
   data() {
     return {
+      clusterPath: cluster,
       isLoading: true,
       openedMarkerIndex: null,
       openedMarker: {
@@ -119,6 +117,26 @@ export default {
         {
           map: {
           },
+        },
+      ],
+      clusterStyles: [
+        {
+          textColor: 'black',
+          url: cluster,
+          height: 32.2,
+          width: 33,
+        },
+        {
+          textColor: 'black',
+          url: cluster,
+          height: 46,
+          width: 46,
+        },
+        {
+          textColor: 'black',
+          url: cluster,
+          height: 64,
+          width: 64,
         },
       ],
     };
@@ -138,7 +156,7 @@ export default {
     },
   },
   mounted() {
-    axios.get('https://coworking-explorer.jencoding.com/spaces')
+    axios.get('https://coworking-explorer.jencoding.com/api/spaces')
       .then((response) => {
         this.spaces = response.data;
         this.isLoading = false;
