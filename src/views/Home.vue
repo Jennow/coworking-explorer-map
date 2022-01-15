@@ -156,10 +156,13 @@ export default {
     },
   },
   mounted() {
+    const component = this;
     axios.get('https://coworking-explorer.jencoding.com/api/spaces')
       .then((response) => {
         this.spaces = response.data;
-        this.isLoading = false;
+        setTimeout(() => {
+          component.isLoading = false;
+        }, 500);
       });
   },
 };

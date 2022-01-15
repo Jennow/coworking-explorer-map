@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ loader: true, fadeout: !isLoading }">
-    Loading ...
+  <div :class="{ loader: true, fadeout: !isLoading, fadein: isLoading}">
+    <img :src="require('./../assets/Logo2.svg')" alt="">
   </div>
 </template>
 
@@ -11,16 +11,27 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+
+img {
+  width: 250px;
+  height: 250px;
+  margin: auto;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  display: block;
+  position: absolute;
+}
+
 .loader {
   bottom: 0;
   background: #fff;
-  color: #6051dc;
+  z-index: 2000;
   display: block;
   font-size: 32px;
   left: 0;
   overflow: hidden;
-  padding-top: 10vh;
   position: fixed;
   right: 0;
   text-align: center;
@@ -31,10 +42,21 @@ export default {
   animation: fadeout 1s forwards;
 }
 
+.fadein {
+  animation: fadein 1s forwards;
+}
+
 @keyframes fadeout {
   to {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+@keyframes fadein {
+  to {
+    opacity: 100;
+    visibility: 100;
   }
 }
 </style>
