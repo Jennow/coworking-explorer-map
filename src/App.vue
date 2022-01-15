@@ -28,7 +28,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #000;
+  max-width: 1200px;
   min-height: 100vh;
+  margin: auto;
 }
 
 #nav {
@@ -55,6 +57,8 @@ h1, h2, h3, h4, h5 {
   font-weight: 300;
   font-family: 'DM Serif Display', serif;
   margin: 0 0 1rem 0;
+  word-break: break-word;
+  overflow: visible;
 }
 
 h1 {
@@ -104,15 +108,24 @@ p {
 }
 
 .glass {
-  /* background-color: rgba(255, 255, 255, .30); */
-  background-color: #6051dc;
-  color: #fff;
-  backdrop-filter: blur(5px);
+  background-color: rgba(255, 255, 255, .30);
+  background-color: #f0f0f0;
+  color: #000;
   box-sizing: border-box;
-  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  /* box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px; */
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 20px;
+}
+
+.flex {
+  display: flex;
+}
+
+@media screen and (max-width:589px) {
+  .flex {
+    flex-direction: column;
+  }
 }
 </style>

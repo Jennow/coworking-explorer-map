@@ -13,7 +13,7 @@
       <div class="glass">
         {{ space.description }}
       </div>
-      <a :href="'https://' + space.website" class="button cta">visit website</a>
+      <a target="_blank" :href="space.website" class="button cta">visit website</a>
       <div v-if="space.prices.length">
         <h2>Prices</h2>
         <div class="glass">
@@ -74,8 +74,9 @@
     background-repeat: no-repeat;
     margin-bottom: 75px;
     box-sizing: border-box;
-  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+    box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+                rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+                rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
     }
 
   .glass-logo-wrapper {
@@ -92,7 +93,8 @@
     margin: auto;
     box-sizing: border-box;
     box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
-  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+                rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+                rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
   }
 
   .logo {
@@ -109,12 +111,17 @@
     margin-bottom: 20px;
   }
 
+  .address-text {
+    margin-bottom: 15px;
+    display: block;
+  }
+
   .vue-map-container {
     height: 20vh;
   }
 
   .price-tile {
-      border-bottom: 1px solid #fff;
+      border-bottom: 2px solid #fff;
       margin-bottom: 20px;
       padding-bottom: 20px;
   }
@@ -126,15 +133,15 @@
 
   .person-hint {
     font-style: italic;
-    color: #7d457b;
+    color: #999;
     float: right;
     line-height: 2.4rem;
     padding: 0 10px;
   }
 
   .price-tag {
-    background-color: #fff;
-    color: #7d457b;
+    background-color: #6051dc;
+    color: #f0f0f0;
     border-radius: 50px;
     padding: 5px;
     font-weight: 900;

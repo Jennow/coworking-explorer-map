@@ -9,6 +9,6 @@ const app = createApp(App);
 app.use(VueGoogleMaps, {
   load: {
     map_id: '213208b604b031da',
-    key: '{{apiKey}}',
+    key: 'AIzaSyDhxOwag-IF4_zG-en8gf0Mm1IUwan3LbE',
   },
 }).use(router).mount('#app');

@@ -35,7 +35,8 @@
         </template>
     </GMapCluster>
     </GMapMap>
-    <div v-if="openedMarker.name" class="info-modal">
+    <transition name="scroll">
+       <div v-if="openedMarker.name" class="info-modal">
       <div v-if="openedMarker.name" class="info">
         <span class="x-icon" @click="openMarker(null)">
           <span class="material-icons">
@@ -43,50 +44,104 @@
           </span>
         </span>
         <h2>{{ openedMarker.name }}</h2>
-        <img :src="openedMarker['cover-photo']" alt="">
-        <a :href="'/detail/' + openedMarker.slug" class="button cta">Details</a>
+        <div class="flex">
+          <div class="img">
+            <img :src="openedMarker['cover-photo']" alt="">
+          </div>
+          <div class="address-info">
+            <p v-if="openedMarker.map.city">{{ openedMarker.map.city }},
+              {{ openedMarker.map.state }},
+              {{ openedMarker.map.country }}
+            </p>
+            <a :href="'/detail/' + openedMarker.slug" class="button cta">Details</a>
+          </div>
+        </div>
       </div>
     </div>
+    </transition>
   </div>
 </template>
 
 <style scoped>
+
+body {
+  overflow-y: hidden;
+}
 
 .vue-map-container {
   height: 100vh;
   overflow-y: hidden;
 }
 
+@keyframes scrollUp {
+  to {
+    bottom: 0px;
+  }
+}
+
+.scroll-enter-active, .scroll-leave-active {
+  transition: all 0.5s ease;
+  bottom: 0px!important;
+}
+.scroll-enter-from, .scroll-leave-to {
+  bottom: -66vh!important;
+}
+
 .info-modal {
+  background: #f0f0f0;
   position: absolute;
-  width: 100vw;
-  max-height: 50vh;
   bottom: 0px;
+  width: 100vw;
+  max-height: 66vh;
   left: 50%;
   color: #000;
   transform: translateX(-50%);
+  overflow-y: scroll;
+  box-shadow: rgb(255 255 255 / 10%) 0px 1px 1px 0px inset,
+              rgb(50 50 93 / 25%) 0px 50px 100px 0px,
+              rgb(0 0 0 / 30%) 0px 30px 60px 0px
+}
+
+.info-modal::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
 .info-modal .x-icon {
   float: right;
+  position: absolute;
+  right: 20px;
   font-size: 2rem;
 }
 
 .info-modal .x-icon span {
-  background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
 .info-modal .info {
-  background: #fff;
   padding: 20px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.info-modal .info img {
-  display: block;
-  margin: auto;
-  /* width: 100%; */
+.info-modal .info .img{
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.info-modal .info .address-info {
+  padding-left: 20px;
+  flex: 2;
+}
+
+.info-modal .info .address-info p {
+  margin: 0 0 20px;
+}
+
+.info-modal .info .address-info a {
+  margin: 0 auto!important;
 }
 
 </style>
@@ -151,7 +206,6 @@ export default {
       };
       if (this.spaces[index]) {
         this.openedMarker = this.spaces[index];
-        console.log(this.openedMarker);
       }
     },
   },
