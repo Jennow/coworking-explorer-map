@@ -2,7 +2,8 @@
   <LoadingScreen :isLoading="isLoading" />
   <div v-if="!isLoading" class='detail'>
     <div class="teaser" style="position: relative">
-      <div class="coverphoto" :style="{ 'background-image': 'url(' + space.coverPhoto +  ')' }"/>
+      <div class="coverphoto"
+      :style="{ 'background-image': 'url(' + space.largeCoverPhoto +  ')' }"/>
       <div class="glass-logo-wrapper">
         <div class="logo" :style="{'background-image': 'url(' + space.logo +  ')'}"/>
       </div>
@@ -35,13 +36,13 @@
             mapId: '213208b604b031da',
             disableDefaultUi: false
           }"
-          :center="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
+          :center="{lat: parseFloat(space.lat), lng: parseFloat(space.lng)}"
           :zoom="10"
           map-type-id="roadmap"
           :disableDefaultUI="true"
     >
       <GMapMarker
-          :position="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
+          :position="{lat: parseFloat(space.lat), lng: parseFloat(space.lng)}"
           :clickable="false"
           :draggable="false"
           :icon="{
@@ -161,10 +162,8 @@ export default {
     return {
       isLoading: true,
       space: {
-        map: {
-          lat: 1,
-          lng: 1,
-        },
+        lat: 1,
+        lng: 1,
         prices: [],
       },
     };
@@ -175,7 +174,6 @@ export default {
   mounted() {
     const component = this;
     const identifier = this.$route.params.id;
-    console.log(identifier);
     window.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         component.isLoading = false;

@@ -1,16 +1,24 @@
 <template>
+  <a v-if="mapMoved" @click="loadMarkers" class="floating-btn">Search here...</a>
   <LoadingScreen :isLoading="isLoading" />
   <div v-if="!isLoading" class="home">
     <GMapMap
+        ref="GMapComponent"
        :options="{
         disableDefaultUi: false,
         mapId: '213208b604b031da',
+        minZoom: 3,
+        maxZoom: 16
       }"
-      :center="center"
-      :zoom="6"
+      :center="{ lng: 10.000654, lat: 53.550341 }"
+      :zoom="12"
       map-type-id="roadmap"
       style="width: 100vw; height: 100vh"
       :disableDefaultUI="true"
+      :center_changed="true"
+      @center_changed="changePosition"
+      :zoom_changed="true"
+      @zoom_changed="changePosition"
     >
     <GMapCluster
       :enableRetinaIcons="true"
@@ -26,7 +34,7 @@
               scaledSize: {width: 30, height: 30},
               labelOrigin: {x: 15, y: -30}
             }"
-            :position="{lat: parseFloat(space.map.lat), lng: parseFloat(space.map.lng)}"
+            :position="{lat: parseFloat(space.lat), lng: parseFloat(space.lng)}"
             :clickable="true"
             :draggable="false"
             @click="openMarker(index)"
@@ -46,14 +54,14 @@
         <h2>{{ openedMarker.name }}</h2>
         <div class="flex">
           <div class="img">
-            <img :src="openedMarker['cover-photo']" alt="">
+            <img :src="openedMarker['smallCoverPhoto']" alt="">
           </div>
           <div class="address-info">
-            <p v-if="openedMarker.map.city">{{ openedMarker.map.city }},
-              {{ openedMarker.map.state }},
-              {{ openedMarker.map.country }}
+            <p v-if="openedMarker.city">{{ openedMarker.city }},
+              {{ openedMarker.state }},
+              {{ openedMarker.country }}
             </p>
-            <a :href="'/detail/' + openedMarker.slug" class="button cta">Details</a>
+            <a :href="'/detail/' + openedMarker.identifier" class="button cta">Details</a>
           </div>
         </div>
       </div>
@@ -77,6 +85,29 @@ body {
   to {
     bottom: 0px;
   }
+}
+
+.floating-btn {
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+    transform: translateX(-50%);
+  top: 80px;
+  max-width: 250px;
+  z-index: 1;
+  border: 2px solid #6051dc;
+  border-radius: 50px;
+  color: #6051dc;
+  padding: 8px 20px;
+  text-decoration: none;
+  box-sizing: border-box;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+  rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+.floating-btn:hover {
+  background-color: #6051dc;
+  color: #fff;
 }
 
 .scroll-enter-active, .scroll-leave-active {
@@ -147,6 +178,7 @@ body {
 </style>
 
 <script>
+// import { ref, watch } from 'vue';
 import LoadingScreen from './LoadingScreen.vue';
 
 const axios = require('axios');
@@ -159,6 +191,8 @@ export default {
   },
   data() {
     return {
+      map: null,
+      mapMoved: false,
       clusterPath: cluster,
       isLoading: true,
       openedMarkerIndex: null,
@@ -168,6 +202,7 @@ export default {
         image: '',
       },
       center: { lng: 10.000654, lat: 53.550341 },
+      zoom: 12,
       spaces: [
         {
           map: {
@@ -201,24 +236,57 @@ export default {
       this.openedMarkerIndex = index;
       this.openedMarker = {
         name: '',
-        slug: '',
+        identifier: '',
         image: '',
       };
       if (this.spaces[index]) {
         this.openedMarker = this.spaces[index];
       }
     },
+    async changePosition() {
+      await this.setMap();
+      this.mapMoved = true;
+    },
+    async setMap() {
+      if (!this.map && this.$refs.GMapComponent) {
+        this.$refs.GMapComponent.$mapPromise.then((map) => {
+          this.map = map;
+        });
+      }
+    },
+    loadMarkers() {
+      this.mapMoved = false;
+      const component = this;
+      let query = '';
+
+      if (this.map) {
+        const bounds = this.map.getBounds();
+        const ne = bounds.getNorthEast().toJSON();
+        const sw = bounds.getSouthWest().toJSON();
+        const northBound = ne.lat;
+        const eastBound = ne.lng;
+        const southBound = sw.lat;
+        const westBound = sw.lng;
+
+        query = `?north=${northBound}&east=${eastBound}&south=${southBound}&west=${westBound}`;
+      } else {
+        query = `?zoom=${this.zoom}&lat=${parseFloat(this.center.lat)}&lng=${parseFloat(this.center.lng)}`;
+      }
+
+      axios.get(`https://coworking-explorer.jencoding.com/api/spaces${query}`)
+        .then((response) => {
+          this.spaces = response.data;
+          console.log(this.spaces);
+          setTimeout(() => {
+            component.isLoading = false;
+          }, 500);
+        });
+    },
   },
   mounted() {
-    const component = this;
-    axios.get('https://coworking-explorer.jencoding.com/api/spaces')
-      .then((response) => {
-        this.spaces = response.data;
-        setTimeout(() => {
-          component.isLoading = false;
-        }, 500);
-      });
+    this.loadMarkers();
   },
+
 };
 
 </script>
