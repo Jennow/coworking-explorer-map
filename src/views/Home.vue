@@ -43,7 +43,7 @@
         </template>
     </GMapCluster>
     </GMapMap>
-    <transition name="scroll">
+    <transition name="">
        <div v-if="openedMarker.name" class="info-modal">
       <div v-if="openedMarker.name" class="info">
         <span class="x-icon" @click="openMarker(null)">
@@ -81,7 +81,7 @@ body {
   overflow-y: hidden;
 }
 
-@keyframes scrollUp {
+@keyframes Up {
   to {
     bottom: 0px;
   }
@@ -110,11 +110,11 @@ body {
   color: #fff;
 }
 
-.scroll-enter-active, .scroll-leave-active {
+.-enter-active, .-leave-active {
   transition: all 0.5s ease;
   bottom: 0px!important;
 }
-.scroll-enter-from, .scroll-leave-to {
+.-enter-from, .-leave-to {
   bottom: -66vh!important;
 }
 
@@ -127,16 +127,16 @@ body {
   left: 50%;
   color: #000;
   transform: translateX(-50%);
-  overflow-y: scroll;
+  overflow-y: ;
   box-shadow: rgb(255 255 255 / 10%) 0px 1px 1px 0px inset,
               rgb(50 50 93 / 25%) 0px 50px 100px 0px,
               rgb(0 0 0 / 30%) 0px 30px 60px 0px
 }
 
-.info-modal::-webkit-scrollbar {
+.info-modal::-webkit-bar {
   display: none;
   -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  bar-width: none;  /* Firefox */
 }
 
 .info-modal .x-icon {
