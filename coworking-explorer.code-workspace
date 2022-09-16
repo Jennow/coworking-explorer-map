@@ -1,0 +1,61 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../coworking-explorer-api"
+		},
+		{
+			"path": "../jencoding_vue"
+		},
+		{
+			"path": "../jencoding_api"
+		},
+		{
+			"path": "../paw_pal"
+		},
+		{
+			"path": "../paw_pal_api"
+		},
+		{
+			"path": "../privacy"
+		},
+		{
+			"path": "../asset_tracker"
+		},
+		{
+			"path": "../asset_tracker_api"
+		},
+		{
+			"path": "../typescript"
+		},
+		{
+			"path": "../user_tool"
+		},
+		{
+			"path": "../phpMyAdmin"
+		},
+		{
+			"path": "../imemory_api"
+		},
+		{
+			"path": "../imemory_app"
+		},
+		{
+			"path": "../hatechno"
+		},
+		{
+			"path": "../bauzeit_cms"
+		},
+		{
+			"path": "../bauzeit-app"
+		},
+		{
+			"path": "../hatechno_api"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "hatechno"
+	}
+}

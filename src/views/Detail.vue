@@ -179,7 +179,7 @@ export default {
         component.isLoading = false;
       }, 500);
     });
-    axios.get(`https://coworking-explorer.jencoding.com/api/spaces/${identifier}`)
+    axios.get(`https://coworking-explorer.jeniferprochnow.com/api/spaces/${identifier}`)
       .then((response) => {
         this.space = response.data;
       });

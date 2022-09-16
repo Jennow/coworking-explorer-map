@@ -25,7 +25,7 @@
       :minimumClusterSize="10"
       :zoomOnClick="true"
       :styles="clusterStyles"
-      imagePath="https://coworking-explorer.jencoding.com/img/Cluster.95f03b58"
+      imagePath="https://coworking-explorer.jeniferprochnow.com/img/Cluster.95f03b58"
       >
       <template v-for="(space, index) in spaces" :key="space">
         <GMapMarker
@@ -273,7 +273,7 @@ export default {
         query = `?zoom=${this.zoom}&lat=${parseFloat(this.center.lat)}&lng=${parseFloat(this.center.lng)}`;
       }
 
-      axios.get(`https://coworking-explorer.jencoding.com/api/spaces${query}`)
+      axios.get(`https://coworking-explorer.jeniferprochnow.com/api/spaces${query}`)
         .then((response) => {
           this.spaces = response.data;
           console.log(this.spaces);
